@@ -326,7 +326,7 @@ class GameScene: SKScene {
         } else if forceBomb == .always {
             enemyType = 0
             
-        } else if forceBomb == .never && enemyType == 2 {
+        } else if forceBomb == .never && enemyType == 3 {
             enemyType = 2
         }
         
