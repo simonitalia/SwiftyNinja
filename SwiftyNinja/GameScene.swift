@@ -20,6 +20,11 @@ enum ForceBomb {
     case never, always, random
 }
 
+enum ForceBonus {
+    
+    case random
+}
+
 class GameScene: SKScene {
     
     let viewController = self
@@ -175,13 +180,23 @@ class GameScene: SKScene {
         let nodesAtPoint = nodes(at: touchLocation)
         
         for node in nodesAtPoint {
-            if node.name == "enemy" {
-                //Destroy penguin
+            if node.name == "enemy" || node.name == "enemyBonus" {
+                //Slice enemy penguin nodes
                 
                 //1. Create particle effect
                 let emitter = SKEmitterNode(fileNamed: "sliceHitEnemy")!
                 emitter.position = node.position
                 addChild(emitter)
+                
+                //6. Update player score
+                if node.name == "enemyBonus" {
+                    score += 5
+                    //Bonus points
+                    
+                } else {
+                    score += 1
+                    //Regular points
+                }
                 
                 //2. Clear enemy penguin node, so it can't be swiped repeatedly
                 node.name = ""
@@ -198,8 +213,7 @@ class GameScene: SKScene {
                 let actionSequence = SKAction.sequence([group, SKAction.removeFromParent()])
                 node.run(actionSequence)
                 
-                //6. Update player score
-                score += 1
+                //6 Old code postion
                 
                 //7. Remove enemy penguion node from aciveEnemies array
                 let index = activeEnemies.index(of: node as! SKSpriteNode)!
@@ -231,7 +245,7 @@ class GameScene: SKScene {
                 let actionSequence = SKAction.sequence([group, SKAction.removeFromParent()])
                 node.parent?.run(actionSequence)
                 
-                //6. Remove enemy bomb node from aciveEnemies array
+                //6. Remove enemy bomb node from aciveEnemies array (refrences enemy image node only, within enemy bombContainer)
                 let index = activeEnemies.index(of: node.parent as! SKSpriteNode)!
                 activeEnemies.remove(at: index)
                 
@@ -304,14 +318,19 @@ class GameScene: SKScene {
         var enemy: SKSpriteNode!
         var enemyType = Int.random(in: 0...6)
         
-        if forceBomb == .never {
+        //Set normal enemy penguin node
+        if forceBomb == .never && enemyType != 3 {
             enemyType = 1
-            
+        
+        //Set enemy bomb node
         } else if forceBomb == .always {
             enemyType = 0
+            
+        } else if forceBomb == .never && enemyType == 2 {
+            enemyType = 2
         }
         
-        //If enemy is a Bomb
+        //Create bomb enemy
         if enemyType == 0 {
     
             //Bombs
@@ -342,12 +361,20 @@ class GameScene: SKScene {
             let emitter = SKEmitterNode(fileNamed: "sliceFuse")!
             emitter.position = CGPoint(x: 76, y: 64)
             enemy.addChild(emitter)
-
+            
+        //Create bonus enemy penguin node/s
+        } else if enemyType == 2 {
+                enemy = SKSpriteNode(imageNamed: "penguinBonus")
+                run(SKAction.playSoundFileNamed("launch.caf", waitForCompletion: false))
+                enemy.name = "enemyBonus"
+         
+        //Create regular enemy penguin node
         } else {
             enemy = SKSpriteNode(imageNamed: "penguin")
             run(SKAction.playSoundFileNamed("launch.caf", waitForCompletion: false))
             enemy.name = "enemy"
-          }
+
+        }
         
         //1. Give enemy random position from bottom edge of screen
         let randomPosition = CGPoint(x: Int.random(in: 64...960), y: -128)
@@ -415,7 +442,7 @@ class GameScene: SKScene {
                 if node.position.y < -140 {
                     node.removeAllActions()
                     
-                    if node.name == "enemy" {
+                    if node.name == "enemy" || node.name == "enemyBonus"{
                         node.name = ""
                         subtractLife()
                         
