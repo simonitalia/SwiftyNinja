@@ -204,12 +204,12 @@ class GameScene: SKScene {
                 //3. Stop enemy penguin node falling animation
                 node.physicsBody?.isDynamic = false
                 
-                //4. Sclae enemy penguin node in and out simultaneously
+                //4. Scale enemy penguin node in and out simultaneously
                 let scaleOut = SKAction.scale(to: 0.001, duration: 0.2)
                 let fadeOut = SKAction.fadeOut(withDuration: 0.2)
                 let group = SKAction.group([scaleOut, fadeOut])
                 
-                //5. Remove enemy penguin node from scene
+                //5. Remove enemy penguin node from scene, using group object above
                 let actionSequence = SKAction.sequence([group, SKAction.removeFromParent()])
                 node.run(actionSequence)
                 
