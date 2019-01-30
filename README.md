@@ -40,6 +40,7 @@ This iOS app is developed as a guided project in the iBook tutorial "Hacking wit
 
 - Notification / observer (with didSet)
 
+- Git / Github
 
 # Stretch goals
 Some features included are not part of the guided project, but are added as stretch goals. Stretch goals apply learned knowledge to accomplish and are completed unassisted. Stretch goals may either be suggested by the teaching instructor or self imposed. Strecth goals / features implemented (if any) will be listed here.
@@ -56,7 +57,7 @@ Some features included are not part of the guided project, but are added as stre
 
 - App icons (self imposed)
 
-- Source control with git (self imposed)
+- Source control with git (local) / github (remote) (self imposed)
 
 
 # Completed
