@@ -54,6 +54,8 @@ Some features included are not part of the guided project, but are added as stre
 
 - Enable user to Play again from Alert, when game ends (self imposed)
 
+- App icons (self imposed)
+
 
 # Completed
 December, 2018
