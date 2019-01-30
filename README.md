@@ -56,6 +56,8 @@ Some features included are not part of the guided project, but are added as stre
 
 - App icons (self imposed)
 
+- Source control with git (self imposed)
+
 
 # Completed
 December, 2018
