@@ -177,19 +177,19 @@ class GameScene: SKScene {
         }
         
         //Slice to win code
-        let nodesAtPoint = nodes(at: touchLocation)
+        let touchedNodes = nodes(at: touchLocation)
         
-        for node in nodesAtPoint {
-            if node.name == "enemy" || node.name == "enemyBonus" {
+        for touchedNode in touchedNodes {
+            if touchedNode.name == "enemy" || touchedNode.name == "enemyBonus" {
                 //Slice enemy penguin nodes
                 
                 //1. Create particle effect
                 let emitter = SKEmitterNode(fileNamed: "sliceHitEnemy")!
-                emitter.position = node.position
+                emitter.position = touchedNode.position
                 addChild(emitter)
                 
                 //6. Update player score
-                if node.name == "enemyBonus" {
+                if touchedNode.name == "enemyBonus" {
                     score += 5
                     //Bonus points
                     
@@ -199,10 +199,10 @@ class GameScene: SKScene {
                 }
                 
                 //2. Clear enemy penguin node, so it can't be swiped repeatedly
-                node.name = ""
+                touchedNode.name = ""
                 
                 //3. Stop enemy penguin node falling animation
-                node.physicsBody?.isDynamic = false
+                touchedNode.physicsBody?.isDynamic = false
                 
                 //4. Scale enemy penguin node in and out simultaneously
                 let scaleOut = SKAction.scale(to: 0.001, duration: 0.2)
@@ -211,30 +211,30 @@ class GameScene: SKScene {
                 
                 //5. Remove enemy penguin node from scene, using group object above
                 let actionSequence = SKAction.sequence([group, SKAction.removeFromParent()])
-                node.run(actionSequence)
+                touchedNode.run(actionSequence)
                 
                 //6 Old code postion
                 
                 //7. Remove enemy penguion node from aciveEnemies array
-                let index = activeEnemies.index(of: node as! SKSpriteNode)!
+                let index = activeEnemies.index(of: touchedNode as! SKSpriteNode)!
                 activeEnemies.remove(at: index)
                 
                 //8. Play enemy penguin node hit sound
                 run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
                 
-            } else if node.name ==  "bomb" {
+            } else if touchedNode.name ==  "bomb" {
                 //Destroy bomb
                 
                 //1. Create particle effect
                 let emitter = SKEmitterNode(fileNamed: "sliceHitBomb")!
-                emitter.position = node.parent!.position
+                emitter.position = touchedNode.parent!.position
                 addChild(emitter)
                 
                 //2. Clear enemy bomb node, so it can't be swiped repeatedly
-                node.name = ""
+                touchedNode.name = ""
                 
                 //3. Stop enemy bomb node falling animation
-                node.parent?.physicsBody?.isDynamic = false
+                touchedNode.parent?.physicsBody?.isDynamic = false
                 
                 //4. Sclae enemy bomb node in and out simultaneously
                 let scaleOut = SKAction.scale(to: 0.001, duration: 0.2)
@@ -243,10 +243,10 @@ class GameScene: SKScene {
                 
                 //5. Remove enemy bomb node from scene
                 let actionSequence = SKAction.sequence([group, SKAction.removeFromParent()])
-                node.parent?.run(actionSequence)
+                touchedNode.parent?.run(actionSequence)
                 
                 //6. Remove enemy bomb node from aciveEnemies array (refrences enemy image node only, within enemy bombContainer)
-                let index = activeEnemies.index(of: node.parent as! SKSpriteNode)!
+                let index = activeEnemies.index(of: touchedNode.parent as! SKSpriteNode)!
                 activeEnemies.remove(at: index)
                 
                 //7. Play enemy bomb node hit sound
@@ -330,7 +330,7 @@ class GameScene: SKScene {
             enemyType = 2
         }
         
-        //Create bomb enemy
+        //MARK: - Create bomb enemy
         if enemyType == 0 {
     
             //Bombs
@@ -339,7 +339,7 @@ class GameScene: SKScene {
             enemy.zPosition = 1
             enemy.name = "bombContainer"
             
-            //2. Add Bomb Image and add to enemy container
+            //2. Add Bomb Image and add to enemy bombContainer
             let bombImage = SKSpriteNode(imageNamed: "sliceBomb")
             bombImage.name = "bomb"
             enemy.addChild(bombImage)
@@ -357,7 +357,7 @@ class GameScene: SKScene {
             bombSoundEffect = sound
             sound.play()
             
-            //5. Create particle emitter for bomb fuse and add to enemy container
+            //5. Create particle emitter for bomb fuse and add to enemy bombContainer
             let emitter = SKEmitterNode(fileNamed: "sliceFuse")!
             emitter.position = CGPoint(x: 76, y: 64)
             enemy.addChild(emitter)
@@ -375,6 +375,8 @@ class GameScene: SKScene {
             enemy.name = "enemy"
 
         }
+        
+        //MARK: - Postion and move enemy
         
         //1. Give enemy random position from bottom edge of screen
         let randomPosition = CGPoint(x: Int.random(in: 64...960), y: -128)
@@ -427,7 +429,6 @@ class GameScene: SKScene {
             alertController.addAction(UIAlertAction(title: "Play again?", style: .default, handler: {
                 action in self.restartGame()
             }))
-
             
             self.view?.window?.rootViewController?.present(alertController, animated: true)
             
@@ -451,6 +452,7 @@ class GameScene: SKScene {
                         if let index = activeEnemies.index(of: node) {
                             activeEnemies.remove(at: index)
                         }
+                    
                     } else if node.name == "bombContainer" {
                         node.name = ""
                         node.removeFromParent()
