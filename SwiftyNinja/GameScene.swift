@@ -215,7 +215,7 @@ class GameScene: SKScene {
                 
                 //6 Old code postion
                 
-                //7. Remove enemy penguion node from aciveEnemies array
+                //7. Remove enemy penguin node from aciveEnemies array
                 let index = activeEnemies.index(of: touchedNode as! SKSpriteNode)!
                 activeEnemies.remove(at: index)
                 
@@ -440,6 +440,7 @@ class GameScene: SKScene {
         if activeEnemies.count > 0 {
             for node in activeEnemies {
                 
+                //Remove nodes not visible on screen
                 if node.position.y < -140 {
                     node.removeAllActions()
                     
@@ -573,7 +574,7 @@ class GameScene: SKScene {
             endGame(triggeredByBomb: false)
         }
         
-        //Modify content of existing priteNode (rather than recreate node) withSKTexture
+        //Modify content of existing spriteNode (rather than recreate node) withSKTexture
         life.texture = SKTexture(imageNamed: "sliceLifeGone")
         
         life.xScale = 1.3
@@ -607,9 +608,6 @@ class GameScene: SKScene {
             livesImages[1].texture = SKTexture(imageNamed: "sliceLifeGone")
             livesImages[2].texture = SKTexture(imageNamed: "sliceLifeGone")
             
-//            for livesImage in livesImages {
-//                livesImage.texture = SKTexture(imageNamed: "sliceLifeGone")
-//            }
         }
 
     } //End endGame() method
@@ -622,7 +620,6 @@ class GameScene: SKScene {
         nextScene.scaleMode = self.scaleMode
         nextScene.backgroundColor = UIColor.black
         self.view?.presentScene(nextScene, transition: SKTransition.fade(with: UIColor.black, duration: 1.5))
-        
     }
 }
 
